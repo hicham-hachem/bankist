@@ -61,6 +61,7 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
+// Display all the transaction on the DOM
 const displayMovements = function (movements) {
     containerMovements.innerHTML = "";
 
@@ -78,8 +79,19 @@ const displayMovements = function (movements) {
         containerMovements.insertAdjacentHTML("afterbegin", html);
     });
 };
-
 displayMovements(account1.movements);
+
+// Computing usernames
+const createUsernames = function (accs) {
+    accs.forEach(function (acc) {
+        acc.username = acc.owner
+            .toLowerCase()
+            .split(" ")
+            .map((name) => name[0])
+            .join("");
+    });
+};
+createUsernames(accounts);
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
