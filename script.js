@@ -66,25 +66,27 @@ const displayMovements = function (movements) {
 
         const html = `
             <div class="movements__row">
-                <div class="movements__type movements__type--${type}">${
-            i + 1
-        } ${type}</div>
-                <div class="movements__date">3 days ago</div>
-                <div class="movements__value">${mov}€</div>
+                <div class="movements__type movements__type--${type}">
+                    ${i + 1} ${type}
+                </div>
+                <div class="movements__date">
+                    3 days ago
+                </div>
+                <div class="movements__value">
+                    ${mov}€
+                </div>
             </div>
         `;
 
         containerMovements.insertAdjacentHTML('afterbegin', html);
     });
 };
-displayMovements(account1.movements);
 
 // Calculating and displaying the balance
 const calcDisplayBalance = function (movements) {
     const balance = movements.reduce((acc, mov) => (acc += mov), 0);
     labelBalance.textContent = `${balance}€`;
 };
-calcDisplayBalance(account1.movements);
 
 // Calculating and displaying the summary
 const calcDisplaySummary = function (movements) {
@@ -105,7 +107,6 @@ const calcDisplaySummary = function (movements) {
         .reduce((acc, int) => acc + int, 0);
     labelSumInterest.textContent = `${interest}€`;
 };
-calcDisplaySummary(account1.movements);
 
 // Computing usernames
 const createUsernames = function (accounts) {
@@ -118,3 +119,33 @@ const createUsernames = function (accounts) {
     });
 };
 createUsernames(accounts);
+
+// Event handler
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+    e.preventDefault(); // Prevent form from submitting
+    currentAccount = accounts.find(
+        acc => acc.username === inputLoginUsername.value
+    );
+    if (currentAccount?.pin === Number(inputLoginPin.value)) {
+        // Display UI and message
+        labelWelcome.textContent = `Welcome back, ${
+            currentAccount.owner.split(' ')[0]
+        }`;
+        containerApp.style.opacity = 100;
+
+        // Clear input fields
+        inputLoginUsername.value = inputLoginPin.value = '';
+        inputLoginPin.blur(); // Remove the focusing from the input field
+
+        // Display movements
+        displayMovements(currentAccount.movements);
+
+        // Display balance
+        calcDisplayBalance(currentAccount.movements);
+
+        // Display summary
+        calcDisplaySummary(currentAccount.movements);
+    }
+});
