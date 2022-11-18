@@ -182,6 +182,23 @@ btnTransfer.addEventListener('click', function (e) {
     }
 });
 
+// Request a loan
+btnLoan.addEventListener('click', function (e) {
+    e.preventDefault();
+    const amount = Number(inputLoanAmount.value);
+    if (
+        amount > 0 &&
+        currentAccount.movements.some(mov => mov >= amount * 0.1)
+    ) {
+        // Add movement
+        currentAccount.movements.push(amount);
+
+        // Update UI
+        updateUI(currentAccount);
+    }
+    inputLoanAmount.value = '';
+});
+
 // Closing an account
 btnClose.addEventListener('click', function (e) {
     e.preventDefault();
