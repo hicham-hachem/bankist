@@ -88,7 +88,7 @@ const displayMovements = function (movements, sort = false) {
                     3 days ago
                 </div>
                 <div class="movements__value">
-                    ${mov}€
+                    ${mov.toFixed(2)}€
                 </div>
             </div>
         `;
@@ -100,7 +100,7 @@ const displayMovements = function (movements, sort = false) {
 // Calculating and displaying the balance
 const calcDisplayBalance = function (acc) {
     acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-    labelBalance.textContent = `${acc.balance}€`;
+    labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 // Calculating and displaying the summary
@@ -108,19 +108,19 @@ const calcDisplaySummary = function (acc) {
     const incomes = acc.movements
         .filter(mov => mov > 0)
         .reduce((acc, mov) => acc + mov, 0);
-    labelSumIn.textContent = `${incomes}€`;
+    labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
     const out = acc.movements
         .filter(mov => mov < 0)
         .reduce((acc, mov) => acc + mov, 0);
-    labelSumOut.textContent = `${Math.abs(out)}€`;
+    labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
     const interest = acc.movements
         .filter(mov => mov > 0)
         .map(deposit => (deposit * acc.interestRate) / 100)
         .filter((int, i, arr) => int >= 1)
         .reduce((acc, int) => acc + int, 0);
-    labelSumInterest.textContent = `${interest}€`;
+    labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 // Computing usernames
@@ -154,7 +154,7 @@ btnLogin.addEventListener('click', function (e) {
     currentAccount = accounts.find(
         acc => acc.username === inputLoginUsername.value
     );
-    if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    if (currentAccount?.pin === +inputLoginPin.value) {
         // Display UI and message
         labelWelcome.textContent = `Welcome back, ${
             currentAccount.owner.split(' ')[0]
@@ -173,7 +173,7 @@ btnLogin.addEventListener('click', function (e) {
 // Implementing transfers
 btnTransfer.addEventListener('click', function (e) {
     e.preventDefault();
-    const amount = Number(inputTransferAmount.value);
+    const amount = +inputTransferAmount.value;
     const receiverAcc = accounts.find(
         acc => acc.username === inputTransferTo.value
     );
@@ -199,7 +199,7 @@ btnTransfer.addEventListener('click', function (e) {
 // Request a loan
 btnLoan.addEventListener('click', function (e) {
     e.preventDefault();
-    const amount = Number(inputLoanAmount.value);
+    const amount = Math.floor(inputLoanAmount.value);
     if (
         amount > 0 &&
         currentAccount.movements.some(mov => mov >= amount * 0.1)
@@ -218,7 +218,7 @@ btnClose.addEventListener('click', function (e) {
     e.preventDefault();
     if (
         inputCloseUsername.value === currentAccount.username &&
-        Number(inputClosePin.value) === currentAccount.pin
+        +inputClosePin.value === currentAccount.pin
     ) {
         const index = accounts.findIndex(
             acc => acc.username === currentAccount.username
